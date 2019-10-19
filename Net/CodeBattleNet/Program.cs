@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using CodeBattleNetLibrary;
 using static CodeBattleNet.Configuration;
 
@@ -250,28 +249,40 @@ namespace CodeBattleNet
 		static bool ActBarier()
 		{
 			var done = false;
-			if (G.IsAnyOfAt(G.PlayerX, G.PlayerY + 1, Destructible) && lastShotBarrier == Dir.Down)
+			if (
+				(G.IsAnyOfAt(G.PlayerX, G.PlayerY + 1, Destructible) || G.IsAnyOfAt(G.PlayerX, G.PlayerY + 2, Destructible))
+				&& lastShotBarrier == Dir.Down
+			)
 			{
 				G.SendActions(G.Down() + "," + G.Act());
 				done = true;
 				lastShotBarrier = Dir.Down;
 			}
 
-			if (G.IsAnyOfAt(G.PlayerX - 1, G.PlayerY, Destructible) && lastShotBarrier == Dir.Left)
+			if (
+				(G.IsAnyOfAt(G.PlayerX - 1, G.PlayerY, Destructible) || G.IsAnyOfAt(G.PlayerX - 2, G.PlayerY, Destructible))
+				&& lastShotBarrier == Dir.Left
+			)
 			{
 				G.SendActions(G.Left() + "," + G.Act());
 				done = true;
 				lastShotBarrier = Dir.Left;
 			}
 
-			if (G.IsAnyOfAt(G.PlayerX + 1, G.PlayerY, Destructible) && lastShotBarrier == Dir.Right)
+			if (
+				(G.IsAnyOfAt(G.PlayerX + 1, G.PlayerY, Destructible) || G.IsAnyOfAt(G.PlayerX + 2, G.PlayerY, Destructible))
+				&& lastShotBarrier == Dir.Right
+			)
 			{
 				G.SendActions(G.Right() + "," + G.Act());
 				done = true;
 				lastShotBarrier = Dir.Right;
 			}
 
-			if (G.IsAnyOfAt(G.PlayerX, G.PlayerY - 1, Destructible) && lastShotBarrier == Dir.Up)
+			if (
+				(G.IsAnyOfAt(G.PlayerX, G.PlayerY - 1, Destructible) || G.IsAnyOfAt(G.PlayerX, G.PlayerY - 2, Destructible))
+				&& lastShotBarrier == Dir.Up
+			)
 			{
 				G.SendActions(G.Up() + "," + G.Act());
 				done = true;
@@ -281,6 +292,11 @@ namespace CodeBattleNet
 			if (done)
 			{
 				S.ActCooldown = 4;
+			}
+
+			if (!done)
+			{
+				lastShotBarrier = (Dir) (new Random()).Next(3);
 			}
 
 			return done;
