@@ -246,33 +246,44 @@ namespace CodeBattleNet
 			return done;
 		}
 
+		private static Dir lastShotBarrier = Dir.Left;
 		static bool ActBarier()
 		{
-			if (G.IsAnyOfAt(G.PlayerX, G.PlayerY + 1, Destructible))
+			var done = false;
+			if (G.IsAnyOfAt(G.PlayerX, G.PlayerY + 1, Destructible) && lastShotBarrier == Dir.Down)
 			{
 				G.SendActions(G.Down() + "," + G.Act());
-				return true;
+				done = true;
+				lastShotBarrier = Dir.Down;
 			}
 
-			if (G.IsAnyOfAt(G.PlayerX - 1, G.PlayerY, Destructible))
+			if (G.IsAnyOfAt(G.PlayerX - 1, G.PlayerY, Destructible) && lastShotBarrier == Dir.Left)
 			{
 				G.SendActions(G.Left() + "," + G.Act());
-				return true;
+				done = true;
+				lastShotBarrier = Dir.Left;
 			}
 
-			if (G.IsAnyOfAt(G.PlayerX + 1, G.PlayerY, Destructible))
+			if (G.IsAnyOfAt(G.PlayerX + 1, G.PlayerY, Destructible) && lastShotBarrier == Dir.Right)
 			{
 				G.SendActions(G.Right() + "," + G.Act());
-				return true;
+				done = true;
+				lastShotBarrier = Dir.Right;
 			}
 
-			if (G.IsAnyOfAt(G.PlayerX, G.PlayerY - 1, Destructible))
+			if (G.IsAnyOfAt(G.PlayerX, G.PlayerY - 1, Destructible) && lastShotBarrier == Dir.Up)
 			{
 				G.SendActions(G.Up() + "," + G.Act());
-				return true;
+				done = true;
+				lastShotBarrier = Dir.Up;
 			}
 
-			return false;
+			if (done)
+			{
+				S.ActCooldown = 4;
+			}
+
+			return done;
 		}
 
 		private static Elements[] EnemyTankElements =>
